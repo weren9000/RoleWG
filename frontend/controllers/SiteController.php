@@ -14,6 +14,7 @@ use frontend\models\PasswordResetRequestForm;
 use frontend\models\ResetPasswordForm;
 use frontend\models\SignupForm;
 use frontend\models\ContactForm;
+use common\services\auth\SignupService;
 
 /**
  * Site controller
@@ -82,24 +83,29 @@ class SiteController extends Controller
      *
      * @return mixed
      */
+
     public function actionLogin()
     {
         if (!Yii::$app->user->isGuest) {
             return $this->goHome();
         }
 
-        $model = new LoginForm();
-        if ($model->load(Yii::$app->request->post()) && $model->login()) {
-            return $this->goBack();
-        } else {
-            $model->password = '';
-
-            return $this->render('login', [
-                'model' => $model,
-            ]);
+        $form = new LoginForm();
+        if ($form->load(Yii::$app->request->post())) {
+            try{
+                if($form->login()){
+                    return $this->goBack();
+                }
+            } catch (\DomainException $e){
+                Yii::$app->session->setFlash('error', $e->getMessage());
+    return $this->goHome();
+            }
         }
-    }
 
+        return $this->render('login', [
+            'model' => $form,
+        ]);
+    }
     /**
      * Logs out the current user.
      *
@@ -152,16 +158,38 @@ class SiteController extends Controller
      */
     public function actionSignup()
     {
-        $model = new SignupForm();
-        if ($model->load(Yii::$app->request->post()) && $model->signup()) {
-            Yii::$app->session->setFlash('success', 'Thank you for registration. Please check your inbox for verification email.');
-            return $this->goHome();
+        $form = new SignupForm();
+        if ($form->load(Yii::$app->request->post()) && $form->validate()) {
+            $signupService = new SignupService();
+    
+            try{
+                $user = $signupService->signup($form);
+                Yii::$app->session->setFlash('success', 'Check your email to confirm the registration.');
+                $signupService->sentEmailConfirm($user);
+                return $this->goHome();
+            } catch (\RuntimeException $e){
+                Yii::$app->errorHandler->logException($e);
+                Yii::$app->session->setFlash('error', $e->getMessage());
+            }
         }
-
+    
         return $this->render('signup', [
-            'model' => $model,
+            'model' => $form,
         ]);
     }
+
+    // public function actionSignup()
+    // {
+    //     $model = new SignupForm();
+    //     if ($model->load(Yii::$app->request->post()) && $model->signup()) {
+    //         Yii::$app->session->setFlash('success', 'Thank you for registration. Please check your inbox for verification email.');
+    //         return $this->goHome();
+    //     }
+
+    //     return $this->render('signup', [
+    //         'model' => $model,
+    //     ]);
+    // }
 
     /**
      * Requests password reset.
@@ -257,4 +285,20 @@ class SiteController extends Controller
             'model' => $model
         ]);
     }
+
+    public function actionSignupConfirm($token)
+    {
+        $signupService = new SignupService();
+
+        try{
+            $signupService->confirmation($token);
+            Yii::$app->session->setFlash('success', 'You have successfully confirmed your registration.');
+        } catch (\Exception $e){
+            Yii::$app->errorHandler->logException($e);
+            Yii::$app->session->setFlash('error', $e->getMessage());
+        }
+
+        return $this->goHome();
+    }
+
 }
