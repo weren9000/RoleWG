@@ -1,0 +1,5 @@
+открыть консоль openserver
+выбрать директорию X:\...\domains\RoleWG
+Запустить команды
+composer install
+php init
