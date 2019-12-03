@@ -142,6 +142,15 @@ class SiteController extends Controller
     }
 
     /**
+     * Displays contact page.
+     *
+     * @return mixed
+     */
+    public function actionScore()
+    {
+        return $this->render('score');
+    }
+    /**
      * Displays about page.
      *
      * @return mixed
