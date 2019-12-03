@@ -296,4 +296,25 @@ class SiteController extends Controller
 
         return $this->goHome();
     }
+
+    /**
+     * Displays homepage.
+     *
+     * @return mixed
+     */
+    public function actionMoneys()
+    {
+        return $this->render('moneys');
+    }
+
+    /**
+     * Displays homepage.
+     *
+     * @return mixed
+     */
+    public function actionHistory()
+    {
+        return $this->render('history');
+    }
+
 }
