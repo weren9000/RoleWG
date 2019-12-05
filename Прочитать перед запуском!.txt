@@ -1,5 +1,8 @@
+Запустить openserver
+Запустить сервер
 открыть консоль openserver
 выбрать директорию X:\...\domains\RoleWG
 Запустить команды
 composer install
 php init
+yii migrate
