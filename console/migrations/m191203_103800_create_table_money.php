@@ -21,7 +21,7 @@ public function up()
 
         $this->createTable('{{%money}}', [
             'id' => $this->primaryKey(),
-            'username' => $this->string()->notNull()->unique(),
+            'username' => $this->string()->notNull(),
             'currency' => $this->string()->notNull(),
             'total' => $this->integer()->defaultValue(0),
             'timers' => $this->timestamp()
