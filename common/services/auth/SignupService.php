@@ -2,9 +2,11 @@
 
 namespace common\services\auth;
 
+use common\models\Money;
 use Yii;
 use common\models\User;
 use frontend\models\SignupForm;
+use yii\behaviors\TimestampBehavior;
 
 class SignupService
 {
@@ -18,13 +20,28 @@ class SignupService
         $user->email = $form->email;
         $user->email_confirm_token = Yii::$app->security->generateRandomString();
         $user->status = User::STATUS_WAIT;
-
+        $name = $form->username;
         if(!$user->save()){
             throw new \RuntimeException('Saving error.');
         }
 
+        $money = new Money();
+        $money->username = $name;
+        $money->currency = 'usd';
+        $money->total = '0';
+        $money->timers = date("Y-m-d H:i:s");
+        $money->save();
+
+        $money = new Money();
+        $money->username = $name;
+        $money->currency = 'rub';
+        $money->total = '0';
+        $money->timers = date("Y-m-d H:i:s");
+        $money->save();
+
         return $user;
     }
+
 
 
     public function sentEmailConfirm(User $user)
