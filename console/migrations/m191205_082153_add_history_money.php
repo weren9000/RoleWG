@@ -23,7 +23,7 @@ class m191205_082153_add_history_money extends Migration
             'id' => $this->primaryKey(),
             'namefrom' => $this->string()->notNull(),
             'nameto' => $this->string()->notNull(),
-            'money' => $this->string()->notNull(),
+            'currency' => $this->string()->notNull(),
             'total' => $this->integer()->defaultValue(0),
             'tranz' => $this->integer()->defaultValue(0),
             'timers' => $this->timestamp()
