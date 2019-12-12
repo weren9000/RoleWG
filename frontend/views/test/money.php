@@ -7,20 +7,17 @@
 use yii\helpers\Html;
 
 
-
-
-
 $this->title = 'Деньги';
 //$this->params['breadcrumbs'][] = $this->title;
 
 $usd = (new \yii\db\Query())
-    ->select(['total', 'username'])
+    ->select(['id','total', 'username'])
     ->from('money')
     ->where(['currency' => 'usd', 'username' => Yii::$app->user->identity->username])
     ->all();
 
 $rub = (new \yii\db\Query())
-    ->select(['total', 'username'])
+    ->select(['id','total', 'username'])
     ->from('money')
     ->where(['currency' => 'rub', 'username' => Yii::$app->user->identity->username])
     ->all();
@@ -29,7 +26,8 @@ $rub = (new \yii\db\Query())
 <div class="site-history">
     <div class="col-md-12">
 
-        Доллары: <?= $usd[0]['total']; ?>
+      # <a href="<?= '/scores/view?id='.$usd[0]['id'] ; ?>"><?= $usd[0]['id']?></a>
+       Доллары: <?= $usd[0]['total']; ?>
 
     </div>
     <div class="col-md-12">

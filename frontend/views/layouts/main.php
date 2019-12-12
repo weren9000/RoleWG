@@ -24,6 +24,12 @@ AppAsset::register($this);
     <?php $this->head() ?>
 </head>
 <body>
+<? 
+
+    $usernameL = Yii::$app->user->identity->username ;
+
+
+?>
 <?php $this->beginBody() ?>
 
 <div class="wrap">
@@ -45,7 +51,7 @@ AppAsset::register($this);
             ['label' => 'Главная', 'url' => ['/site/index']],
 //        ['label' => 'About', 'url' => ['/site/about']],
 //        ['label' => 'Contact', 'url' => ['/site/contact']],
-            ['label' => 'Счета', 'url' => ['/scores/score']],
+            ['label' => 'Счета', 'url' => ['money/index']],
 
         ];
     }
@@ -59,7 +65,7 @@ AppAsset::register($this);
         $menuItems[] = '<li>'
             . Html::beginForm(['/site/logout'], 'post')
             . Html::submitButton(
-                'Logout (' . Yii::$app->user->identity->username . ')',
+                'Logout (' . $usernameL . ')',
                 ['class' => 'btn btn-link logout']
             )
             . Html::endForm()
@@ -78,6 +84,8 @@ AppAsset::register($this);
         ]) ?>
         <?= Alert::widget() ?>
         <?= $content ?>
+        
+        
     </div>
 </div>
 
